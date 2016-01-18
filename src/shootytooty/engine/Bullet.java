@@ -1,39 +1,29 @@
 package shootytooty.engine;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.image.Image;
 
-public class Bullet {
+public class Bullet extends Sprite {
 
-	public Circle bullet;
-	
-	public double Xv;
-	public double Yv;
-	public double Xa;
-	public double Ya;
-	public boolean alive = true;
+	static Image bullet = new Image("bullet.png");
 
-	public Bullet(double Xin, double Yin, double Xvin, double Yvin, double Xain, double Yain, double radin) {
-		Xv = Xvin;
-		Yv = Yvin;
-		Xa = Xain;
-		Ya = Yain;
-		bullet = new Circle(Xin, Yin, radin);
-		bullet.setFill(Color.RED);
+	public Bullet(double X, double Y, double Xv, double Yv, double Xa,
+			double Ya, double rad) {
+		super(bullet, X, Y, Xv, Yv, Xa, Ya, rad);
 	}
-	public Bullet(double Xin, double Yin, double Xvin, double Yvin, double radin) {
-		Xv = Xvin;
-		Yv = Yvin;
-		Xa = 0;
-		Ya = 0;
-		bullet = new Circle(Xin, Yin, radin);
-		bullet.setFill(Color.RED);
+
+	public Bullet(double X, double Y, double Xv, double Yv, double rad) {
+		super(bullet, X, Y, Xv, Yv, rad);
 	}
-	
-	public void update() {
-		bullet.setCenterX(bullet.getCenterX()+Xv);
-		bullet.setCenterY(bullet.getCenterY()+Yv);
-		Xv+=Xa;
-		Yv+=Ya;
+
+	public boolean outOfBounds(int WIDTH, int HEIGHT) {
+		if (hitbox.getCenterX() + hitbox.getRadius() < 0)
+			return true;
+		if (hitbox.getCenterX() - hitbox.getRadius() > WIDTH)
+			return true;
+		if (hitbox.getCenterY() + hitbox.getRadius() < 0)
+			return true;
+		if (hitbox.getCenterY() - hitbox.getRadius() > HEIGHT)
+			return true;
+		return false;
 	}
 }
