@@ -4,8 +4,8 @@ import javafx.scene.image.Image;
 
 public class Player extends Sprite {
 	
-	static Image player = new Image("player.png");
-	static double moveSpeed = 2;
+	static final Image player = new Image("player.png");
+	static final double moveSpeed = 2;
 
 	public Player(double X, double Y, double rad) {
 		super(player, X, Y, 0, 0, rad);

@@ -12,18 +12,6 @@ public class Bullet extends Sprite {
 	}
 
 	public Bullet(double X, double Y, double Xv, double Yv, double rad) {
-		super(bullet, X, Y, Xv, Yv, rad);
-	}
-
-	public boolean outOfBounds(int WIDTH, int HEIGHT) {
-		if (hitbox.getCenterX() + hitbox.getRadius() < 0)
-			return true;
-		if (hitbox.getCenterX() - hitbox.getRadius() > WIDTH)
-			return true;
-		if (hitbox.getCenterY() + hitbox.getRadius() < 0)
-			return true;
-		if (hitbox.getCenterY() - hitbox.getRadius() > HEIGHT)
-			return true;
-		return false;
+		this(X, Y, Xv, Yv, 0, 0, rad);
 	}
 }
