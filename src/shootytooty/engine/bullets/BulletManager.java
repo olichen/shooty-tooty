@@ -15,10 +15,12 @@ public class BulletManager {
 	public BulletManager() {
 	}
 
-	public void setRootNode(Group rootNode) {
+	// set the rootnode
+	public static void setRootNode(Group rootNode) {
 		BulletManager.rootNode = rootNode;
 	}
 
+	// create a bullet and add it to the array
 	public void createBullet(double X, double Y, double Xv, double Yv,
 			double rad) {
 		Bullet newBullet = new Bullet(1, X, Y, Xv, Yv, rad);
@@ -28,17 +30,20 @@ public class BulletManager {
 			rootNode.getChildren().add(1, newBullet.hitbox);
 	}
 
+	//update all bullets
 	public void update() {
 		for (Bullet b : bulletList)
 			b.update();
 	}
 
+	//check for out of bounds bullets
 	public void outOfBounds(int width, int height) {
 		for (Bullet b : bulletList)
 			b.outOfBounds(width, height);
 	}
 
-	public int checkCollisions(Sprite s) {
+	//check for collisions
+	public void checkCollisions(Sprite s) {
 		int damage = 0;
 		for (Bullet b : bulletList) {
 			if (b.collide(s)) {
@@ -46,9 +51,10 @@ public class BulletManager {
 				damage += b.getHitpoints();
 			}
 		}
-		return damage;
+		s.subHitpoints(damage);
 	}
 
+	//clean bullets
 	public void clean() {
 		int numBullets = bulletList.size();
 		for (int i = 0; i < numBullets; i++) {

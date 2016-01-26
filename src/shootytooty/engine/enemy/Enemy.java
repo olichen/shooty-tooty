@@ -1,5 +1,6 @@
-package shootytooty.engine;
+package shootytooty.engine.enemy;
 
+import shootytooty.engine.Sprite;
 import javafx.scene.image.Image;
 
 public class Enemy extends Sprite {

@@ -1,7 +1,6 @@
 package shootytooty.engine;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -9,12 +8,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import shootytooty.engine.bullets.BulletManager;
+import shootytooty.engine.enemy.EnemyManager;
 
 public class World {
 
@@ -27,12 +26,11 @@ public class World {
 	public final static boolean SHOWHITBOX = true;
 
 	private int bulletCooldown = 0;
+	private int timer = 0;
 
-	// private final static List<Bullet> playerBullets = new ArrayList<>();
-	// private final static List<Bullet> enemyBullets = new ArrayList<>();
 	private final static BulletManager playerBullet = new BulletManager();
 	private final static BulletManager enemyBullet = new BulletManager();
-	private final static List<Enemy> enemies = new ArrayList<>();
+	private final static EnemyManager enemyList = new EnemyManager();
 
 	private static Player p1;
 	ArrayList<String> input = new ArrayList<String>();
@@ -53,13 +51,12 @@ public class World {
 				.7, .7, .9));
 		primaryStage.setScene(gameScene);
 
-		playerBullet.setRootNode(rootNode);
+		// set rootnodes
+		BulletManager.setRootNode(rootNode);
+		EnemyManager.setRootNode(rootNode);
 
 		// add player
 		createPlayer();
-
-		// add enemy
-		createEnemy();
 
 		// keyboard event handlers
 		gameScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -117,11 +114,8 @@ public class World {
 		if (input.contains("DOWN"))
 			p1.moveDown();
 
-		// update enemies and check for out of bounds enemies
-		for (Enemy e : enemies) {
-			e.update();
-			e.outOfBounds(WINDOWWIDTH, WINDOWHEIGHT);
-		}
+		enemyList.update();
+		enemyList.outOfBounds(WINDOWWIDTH, WINDOWHEIGHT);
 	}
 
 	// update bullets
@@ -144,22 +138,21 @@ public class World {
 						p1.hitbox.getCenterY(), 0, -2, 2);
 			}
 		}
+		if (timer++ % 50 == 0)
+			createEnemy();
 
 		// create enemy bullets
-		for (Enemy e : enemies) {
-			if (e.isFiring()) {
-				enemyBullet.createBullet(e.hitbox.getCenterX(),
-						e.hitbox.getCenterY(), 0, 2, 2);
-			}
-		}
+		/*
+		 * for (Enemy e : enemies) { if (e.isFiring()) {
+		 * enemyBullet.createBullet(e.hitbox.getCenterX(),
+		 * e.hitbox.getCenterY(), 0, 2, 2); } }
+		 */
 	}
 
 	// check for collisions
 	private void checkCollisions() {
 		// check if any enemies are hit
-		for (Enemy e : enemies) {
-			playerBullet.checkCollisions(e);
-		}
+		enemyList.checkCollisions(playerBullet);
 		// check if player is hit
 		enemyBullet.checkCollisions(p1);
 	}
@@ -170,18 +163,7 @@ public class World {
 		playerBullet.clean();
 		enemyBullet.clean();
 		// clean enemies
-		int numClean = enemies.size();
-		for (int i = 0; i < numClean; i++) {
-			Enemy e = enemies.get(i);
-			if (e.isAlive() == false) {
-				rootNode.getChildren().remove(e.sprite);
-				if (SHOWHITBOX)
-					rootNode.getChildren().remove(e.hitbox);
-				enemies.remove(i);
-				numClean--;
-				i--;
-			}
-		}
+		enemyList.clean();
 	}
 
 	// create players
@@ -194,11 +176,6 @@ public class World {
 
 	// create enemy
 	private void createEnemy() {
-		Image enemy = new Image("enemy.png");
-		Enemy newEnemy = new Enemy(enemy, 10, 0, 100, 1, 0, 20);
-		enemies.add(newEnemy);
-		rootNode.getChildren().add(newEnemy.sprite);
-		if (SHOWHITBOX)
-			rootNode.getChildren().add(newEnemy.hitbox);
+		enemyList.createEnemy(0, 100, 1, 0, 10);
 	}
 }
