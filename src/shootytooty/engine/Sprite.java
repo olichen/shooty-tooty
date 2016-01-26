@@ -9,35 +9,28 @@ public abstract class Sprite {
 
 	public ImageView sprite;
 	public Circle hitbox;
+	public int timer = 0;
+	private int hitpoints;
 
-	public double Xv;
-	public double Yv;
-	public double Xa;
-	public double Ya;
-	public boolean alive = true;
+	private double Xv;
+	private double Yv;
+	private boolean alive = true;
 
-	public Sprite(Image img, double X, double Y, double Xv, double Yv,
-			double Xa, double Ya, double rad) {
+	public Sprite(Image img, int hitpoints, double X, double Y, double Xv,
+			double Yv, double rad) {
 		sprite = new ImageView(img);
 		sprite.setX(X - sprite.getImage().getWidth() / 2);
 		sprite.setY(Y - sprite.getImage().getHeight() / 2);
+		this.hitpoints = hitpoints;
 		this.Xv = Xv;
 		this.Yv = Yv;
-		this.Xa = Xa;
-		this.Ya = Ya;
 		hitbox = new Circle(X, Y, rad, Color.color(1, 0, 0, 0.5));
-	}
-
-	public Sprite(Image img, double X, double Y, double Xv, double Yv,
-			double rad) {
-		this(img, X, Y, Xv, Yv, 0, 0, rad);
 	}
 
 	public void update() {
 		moveX(hitbox.getCenterX() + Xv);
 		moveY(hitbox.getCenterY() + Yv);
-		Xv += Xa;
-		Yv += Ya;
+		timer++;
 	}
 
 	public void moveX(double newX) {
@@ -58,14 +51,32 @@ public abstract class Sprite {
 		return (dist < raddist);
 	}
 
-	public void outOfBounds(int WIDTH, int HEIGHT) {
+	public void outOfBounds(int width, int height) {
 		if (hitbox.getCenterX() + sprite.getImage().getWidth() / 2 < 0)
 			alive = false;
-		if (hitbox.getCenterX() - sprite.getImage().getWidth() / 2 > WIDTH)
+		if (hitbox.getCenterX() - sprite.getImage().getWidth() / 2 > width)
 			alive = false;
 		if (hitbox.getCenterY() + sprite.getImage().getHeight() / 2 < 0)
 			alive = false;
-		if (hitbox.getCenterY() - sprite.getImage().getHeight() / 2 > HEIGHT)
+		if (hitbox.getCenterY() - sprite.getImage().getHeight() / 2 > height)
 			alive = false;
+	}
+
+	public void setDead() {
+		alive = false;
+	}
+
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void subHitpoints(int i) {
+		hitpoints -= i;
+		if (hitpoints <= 0)
+			setDead();
+	}
+
+	public int getHitpoints() {
+		return hitpoints;
 	}
 }

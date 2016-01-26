@@ -8,7 +8,7 @@ public class Player extends Sprite {
 	static final double moveSpeed = 2;
 
 	public Player(double X, double Y, double rad) {
-		super(player, X, Y, 0, 0, rad);
+		super(player, 10, X, Y, 0, 0, rad);
 	}
 
 	public void moveLeft() {
